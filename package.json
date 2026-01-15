@@ -1,5 +1,5 @@
 {
-  "name": "@syster/diagram-core",
+  "name": "@opensyster/diagram-core",
   "version": "0.0.1-alpha",
   "description": "Core diagram types and utilities for Syster SysML v2 modeller",
   "main": "src/index.ts",
