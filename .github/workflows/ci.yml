@@ -1,0 +1,61 @@
+# GitHub Actions CI workflow for npm/TypeScript syster repos
+# Use for: syster-diagram-core, syster-diagram-ui
+#
+# Place this file at: .github/workflows/ci.yml
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      
+      - name: Install dependencies
+        run: bun install
+      
+      - name: Run guidelines
+        run: make run-guidelines
+
+  # Test on multiple Node versions for compatibility
+  node-compat:
+    name: Node.js Compatibility
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [18, 20, 22]
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      
+      - name: Setup Bun (for build)
+        uses: oven-sh/setup-bun@v1
+      
+      - name: Install dependencies
+        run: bun install
+      
+      - name: Build
+        run: bun run build
+      
+      - name: Test with npm
+        run: |
+          cd dist
+          npm pack
