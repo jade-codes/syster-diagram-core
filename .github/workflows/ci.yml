@@ -1,0 +1,15 @@
+# CI workflow using reusable syster-pipelines workflow
+# See: https://github.com/jade-codes/syster-pipelines
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  npm-ci:
+    uses: jade-codes/syster-pipelines/.github/workflows/npm-ci.yml@main
+
