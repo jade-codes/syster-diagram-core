@@ -15,5 +15,9 @@
     "modelling"
   ],
   "author": "jade-codes",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jade-codes/syster-diagram-core.git"
+  }
 }
