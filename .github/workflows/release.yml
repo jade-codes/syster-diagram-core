@@ -1,8 +1,5 @@
-# GitHub Actions Release workflow for npm syster packages
-# Publishes to npm on version tags
-# Use for: syster-diagram-core, syster-diagram-ui
-#
-# Place this file at: .github/workflows/release.yml
+# Release workflow using reusable syster-pipelines workflow
+# See: https://github.com/jade-codes/syster-pipelines
 
 name: Release
 
@@ -13,87 +10,8 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+-*'  # Pre-releases like v0.1.0-alpha
 
 jobs:
-  validate:
-    name: Validate Release
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Extract version from tag
-        id: version
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Releasing version $VERSION"
-      
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-      
-      - name: Install dependencies
-        run: bun install
-      
-      - name: Package
-        run: make package
-      
-      - name: Verify package version matches tag
-        run: |
-          PKG_VERSION=$(node -p "require('./package.json').version")
-          TAG_VERSION="${{ steps.version.outputs.version }}"
-          if [ "$PKG_VERSION" != "$TAG_VERSION" ]; then
-            echo "❌ Package version ($PKG_VERSION) does not match tag ($TAG_VERSION)"
-            exit 1
-          fi
-          echo "✓ Version $PKG_VERSION matches tag"
+  npm-release:
+    uses: jade-codes/syster-pipelines/.github/workflows/npm-release.yml@main
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  publish-npm:
-    name: Publish to npm
-    needs: validate
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write  # For npm provenance
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-      
-      - name: Setup Node.js (for npm publish)
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          registry-url: 'https://registry.npmjs.org'
-      
-      - name: Install dependencies
-        run: bun install
-      
-      - name: Package
-        run: make package
-      
-      - name: Publish to npm
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  github-release:
-    name: Create GitHub Release
-    needs: [validate, publish-npm]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: v${{ needs.validate.outputs.version }}
-          draft: false
-          prerelease: ${{ contains(github.ref, '-') }}
-          generate_release_notes: true
