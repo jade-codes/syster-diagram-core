@@ -2,7 +2,6 @@
  * @syster/diagram-core
  * 
  * Core diagram types and utilities for Syster SysML v2 modeller.
- * This is a stub package that will be implemented later.
  */
 
 export interface DiagramNode {
@@ -17,9 +16,7 @@ export interface DiagramEdge {
   source: string;
   target: string;
   type?: string;
-  /** Optional label to display on edge */
   label?: string;
-  /** Multiplicity for composition edges (e.g., "4", "*") */
   multiplicity?: string;
 }
 
@@ -33,31 +30,9 @@ export const createEmptyDiagram = (): Diagram => ({
   edges: [],
 });
 
-// Re-export SysML types for convenience
-export { NODE_TYPES, FEATURE_DIRECTIONS } from "./sysml-nodes";
-export { EDGE_TYPES } from "./sysml-edges";
-export type { SysMLNode } from "./sysml-nodes";
-export type { SysMLEdge } from "./sysml-edges";
-
-// Re-export converter functions
-export { 
-  convertSymbolToNode, 
-  convertRelationshipToEdge, 
-  createDiagramFromWorkspace 
-} from "./converter";
-export type { 
-  SymbolData, 
-  RelationshipData, 
-  WorkspaceData 
-} from "./converter";
-
-// Re-export layout types
-export type { 
-  LayoutConfig, 
-  Position, 
-  Dimensions, 
-  PositionedNode, 
-  PositionedEdge, 
-  LayoutResult 
-} from "./layout";
-export { LAYOUT_DIRECTIONS, LAYOUT_ALGORITHMS, createDefaultLayoutConfig } from "./layout";
+export * from "./sysml-nodes";
+export * from "./sysml-edges";
+export * from "./converter";
+export * from "./layout";
+export * from "./sysml-views";
+export * from "./view-resolver";
