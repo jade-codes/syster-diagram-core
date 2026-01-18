@@ -74,6 +74,23 @@ export const NODE_TYPES = {
   INTERFACE_USAGE: "InterfaceUsage",
   ALLOCATION_USAGE: "AllocationUsage",
   FLOW_USAGE: "FlowUsage",
+  
+  // KerML Types
+  PACKAGE: "Package",
+  LIBRARY_PACKAGE: "LibraryPackage",
+  FEATURE: "Feature",
+  
+  // KerML Classifiers (definitions)
+  TYPE_DEF: "TypeDef",
+  CLASSIFIER_DEF: "ClassifierDef",
+  CLASS_DEF: "ClassDef",
+  DATATYPE_DEF: "DatatypeDef",
+  STRUCTURE_DEF: "StructureDef",
+  BEHAVIOR_DEF: "BehaviorDef",
+  FUNCTION_DEF: "FunctionDef",
+  ASSOCIATION_DEF: "AssociationDef",
+  ASSOCIATION_STRUCTURE_DEF: "AssociationStructureDef",
+  METACLASS_DEF: "MetaclassDef",
 } as const;
 
 /** Feature directions */
